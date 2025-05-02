@@ -1,0 +1,78 @@
+﻿<Page x:Class="Biblioteka.Views.ManageBooksView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Zarządzaj książkami">
+    <Grid Margin="20">
+        <!-- Back button -->
+        <Button Content="← Cofnij"
+                Width="80" Height="30"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Click="BackButton_Click" />
+
+        <StackPanel Margin="0,40,0,0">
+            <!-- Action buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10">
+                <Button Content="Dodaj książkę" Click="AddBookButton_Click" Margin="0,0,5,0" />
+                <Button Content="Usuń książkę" Click="DeleteBookButton_Click" Margin="0,0,5,0" />
+                <Button Content="Importuj CSV" Click="ImportCsvButton_Click" Margin="0,0,5,0" />
+                <Button Content="Eksportuj CSV" Click="ExportCsvButton_Click" />
+            </StackPanel>
+
+            <!-- Books grid -->
+            <DataGrid Name="BooksGrid"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      SelectionMode="Single"
+                      SelectionChanged="BooksGrid_SelectionChanged"
+                      Height="300"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" SortMemberPath="Id" Width="50" />
+                    <DataGridTextColumn Header="Tytuł" Binding="{Binding Title}" SortMemberPath="Title" Width="*" />
+                    <DataGridTextColumn Header="Autor" Binding="{Binding Author}" SortMemberPath="Author" Width="*" />
+                    <DataGridTextColumn Header="Rok" Binding="{Binding Year}" SortMemberPath="Year" Width="80" />
+                    <DataGridTextColumn Header="Język" Binding="{Binding Language}" SortMemberPath="Language" Width="120" />
+                    <DataGridTextColumn Header="Sztuki" Binding="{Binding CopiesCount}" SortMemberPath="CopiesCount" Width="80" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Book details -->
+            <StackPanel Margin="0,10,0,0">
+                <TextBlock Text="Szczegóły książki:" FontWeight="Bold" Margin="0,0,0,5" />
+                <TextBlock><Run Text="Tytuł: " /><Run Text="{Binding SelectedBookTitle}" /></TextBlock>
+                <TextBlock><Run Text="Autor: " /><Run Text="{Binding SelectedBookAuthor}" /></TextBlock>
+                <TextBlock><Run Text="ISBN: " /><Run Text="{Binding SelectedBookISBN}" /></TextBlock>
+                <TextBlock><Run Text="Wydawca: " /><Run Text="{Binding SelectedBookPublisher}" /></TextBlock>
+                <TextBlock><Run Text="Rok wydania: " /><Run Text="{Binding SelectedBookYear}" /></TextBlock>
+                <TextBlock><Run Text="Stron: " /><Run Text="{Binding SelectedBookPages}" /></TextBlock>
+                <TextBlock><Run Text="Gatunek: " /><Run Text="{Binding SelectedBookGenre}" /></TextBlock>
+                <TextBlock><Run Text="Język: " /><Run Text="{Binding SelectedBookLanguage}" /></TextBlock>
+            </StackPanel>
+
+            <!-- Copies table -->
+            <TextBlock Text="Lista egzemplarzy:" FontWeight="Bold" Margin="0,10,0,5" />
+            <DataGrid Name="CopiesGrid"
+                      ItemsSource="{Binding SelectedBookCopies}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      Height="150"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" Width="50" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding StatusText}" IsReadOnly="True" Width="100" />
+                    <DataGridTextColumn Header="Uwagi" Binding="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="*" IsReadOnly="False" />
+                    <DataGridTemplateColumn Header="Akcje" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Usuń" Tag="{Binding Id}" Click="DeleteCopy_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Add copy button -->
+            <Button Content="Dodaj egzemplarz" HorizontalAlignment="Right" Margin="0,10,0,0" Click="AddCopy_Click" />
+        </StackPanel>
+    </Grid>
+</Page>
