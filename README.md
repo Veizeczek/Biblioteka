@@ -79,8 +79,6 @@ Baza danych `biblioteka.db` zostanie utworzona automatycznie w folderze `Databas
 
 ## 🗄️ Schemat bazy danych
 
-## 🗄️ Schemat bazy danych
-
 ### 📘 `books`
 
 | Kolumna     | Typ     | Uwagi                        |
