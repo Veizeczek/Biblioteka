@@ -69,8 +69,8 @@ Umożliwia dodawanie książek i użytkowników, zarządzanie wypożyczeniami or
    ```bash
    dotnet restore
    ```
-4. Pierwsze uruchomienie:
- w Pliku appsettings.json znajduje się plik konfiguracyjny, który pozwala na stworzenie przykładowej bazy danych(domyślne).
+4. Pierwsze uruchomienie:  
+ w Pliku appsettings.json znajduje się plik konfiguracyjny, który pozwala na stworzenie przykładowej bazy danych(domyślne).  
 5. Uruchom aplikację (`F5`)
 
 Baza danych `biblioteka.db` zostanie utworzona automatycznie w folderze `Database/` (lub innym wskazanym).
