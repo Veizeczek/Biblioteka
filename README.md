@@ -54,7 +54,7 @@ Umożliwia dodawanie książek i użytkowników, zarządzanie wypożyczeniami or
 - System: Windows 10 / 11  
 - .NET SDK: 7.0 lub wyższy  
 - Visual Studio 2022+ lub JetBrains Rider  
-- SQLite Browser (opcjonalnie – do podglądu bazy)
+- DB Browser (opcjonalnie – do podglądu bazy)
 
 ---
 
