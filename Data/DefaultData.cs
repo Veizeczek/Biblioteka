@@ -30,7 +30,7 @@
             // Insert default security question if missing
             cmd.CommandText = @"
 INSERT INTO security_questions (question)
-SELECT 'What is your mother''s maiden name?'
+SELECT 'Imię najstarszego kuzyna?'
 WHERE NOT EXISTS (SELECT 1 FROM security_questions);
 ";
             cmd.ExecuteNonQuery();

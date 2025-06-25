@@ -66,23 +66,58 @@ namespace Biblioteka.Services
             using var cmd = conn.CreateCommand();
             cmd.Transaction = transaction;
 
-            // Find an available copy
-            cmd.CommandText = "SELECT id FROM copies WHERE book_id = @bookId AND status = 0 LIMIT 1;";
+            // 0) Sprawdź limit aktywnych wypożyczeń (max 3)
+            cmd.CommandText = @"
+                SELECT COUNT(*) 
+                FROM loans 
+                WHERE user_id = @userId 
+                AND return_date IS NULL;";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@userId", userId);
+            var activeCount = Convert.ToInt32(cmd.ExecuteScalar());
+            if (activeCount >= 3)
+                throw new InvalidOperationException("Możesz mieć na raz tylko 3 książki.");
+
+            // 1) Sprawdź, czy już nie masz tej samej książki
+            cmd.CommandText = @"
+                SELECT COUNT(*) 
+                FROM loans l
+                JOIN copies c ON l.copy_id = c.id
+                WHERE l.user_id    = @userId
+                AND c.book_id    = @bookId
+                AND l.return_date IS NULL;";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@bookId", bookId);
+            var dupCount = Convert.ToInt32(cmd.ExecuteScalar());
+            if (dupCount > 0)
+                throw new InvalidOperationException("Posiadasz już tą książke wypożyczoną.");
+
+            // 2) Znajdź dostępną kopię
+            cmd.CommandText = @"
+                SELECT id 
+                FROM copies 
+                WHERE book_id = @bookId 
+                AND status  = 0 
+                LIMIT 1;";
+            cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@bookId", bookId);
             var copyIdObj = cmd.ExecuteScalar();
             if (copyIdObj == null)
-                throw new InvalidOperationException("No available copy to loan.");
+                throw new InvalidOperationException("Brak dostępnej kopii do wypożyczenia.");
             int copyId = Convert.ToInt32(copyIdObj);
 
-            // Update copy status to loaned (1)
-            cmd.Parameters.Clear();
+            // 3) Zaktualizuj status kopii na wypożyczony (1)
             cmd.CommandText = "UPDATE copies SET status = 1 WHERE id = @copyId;";
+            cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@copyId", copyId);
             cmd.ExecuteNonQuery();
 
-            // Insert loan record
+            // 4) Dodaj rekord wypożyczenia
+            cmd.CommandText = @"
+                INSERT INTO loans (user_id, copy_id, loan_date) 
+                    VALUES (@userId, @copyId, @loanDate);";
             cmd.Parameters.Clear();
-            cmd.CommandText = @"INSERT INTO loans (user_id,copy_id,loan_date) VALUES (@userId,@copyId,@loanDate);";
             cmd.Parameters.AddWithValue("@userId", userId);
             cmd.Parameters.AddWithValue("@copyId", copyId);
             cmd.Parameters.AddWithValue("@loanDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -90,6 +125,7 @@ namespace Biblioteka.Services
 
             transaction.Commit();
         }
+
 
         // Return a loan: sets return date and updates copy status
         public void ReturnBook(int loanId)

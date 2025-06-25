@@ -137,5 +137,30 @@ namespace Biblioteka.Data.Repositories
             }
             return list;
         }
+        public IEnumerable<Loan> GetLoansPageDescending(int skip, int take)
+        {
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+            SELECT id, user_id, copy_id, loan_date, return_date
+                FROM loans
+            ORDER BY id DESC
+            LIMIT @take OFFSET @skip;";
+            cmd.Parameters.AddWithValue("@take", take);
+            cmd.Parameters.AddWithValue("@skip", skip);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                yield return new Loan {
+                    Id         = reader.GetInt32(0),
+                    UserId     = reader.GetInt32(1),
+                    CopyId     = reader.GetInt32(2),
+                    LoanDate   = DateTime.Parse(reader.GetString(3)),
+                    ReturnDate = reader.IsDBNull(4) ? (DateTime?)null : DateTime.Parse(reader.GetString(4))
+                };
+            }
+        }
+
     }
 }

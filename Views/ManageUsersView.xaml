@@ -1,0 +1,72 @@
+<Page x:Class="Biblioteka.Views.ManageUsersView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Zarządzaj użytkownikami">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>    <!-- Back button -->
+            <RowDefinition Height="*"/>       <!-- DataGrid -->
+            <RowDefinition Height="Auto"/>    <!-- Action buttons -->
+        </Grid.RowDefinitions>
+
+        <!-- ← Cofnij -->
+        <Button Content="← Cofnij"
+                Click="BackButton_Click"
+                Width="80" Height="30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Grid.Row="0"/>
+
+        <!-- Tabela użytkowników -->
+        <DataGrid x:Name="UsersDataGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserSortColumns="True"
+                  Margin="0,5"
+                  Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Login"
+                                    Binding="{Binding Login}"
+                                    IsReadOnly="True"
+                                    SortMemberPath="Login"  
+                                    Width="*"/>
+                <DataGridTextColumn Header="Utworzony"
+                                    Binding="{Binding CreatedAt, StringFormat=\{0:yyyy-MM-dd HH:mm\}}"
+                                    IsReadOnly="True"
+                                    SortMemberPath="CreatedAt"
+                                    Width="180"/>
+                <DataGridTemplateColumn Header="Administrator"
+                                        Width="120"
+                                        SortMemberPath="IsAdmin">  <!-- wskazujemy pole do sortowania -->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsAdmin}"
+                                      Checked="AdminCheckBox_Changed"
+                                      Unchecked="AdminCheckBox_Changed"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Dodaj / Usuń -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,5">
+            <Button Content="Dane użytkownika"
+                    Click="UserDetailsButton_Click"
+                    Margin="5" Width="140"/>
+            <Button Content="+ Dodaj użytkownika"
+                    Click="AddUserButton_Click"
+                    Margin="5" Width="140"/>
+            <Button Content="- Usuń użytkownika"
+                    Click="DeleteUserButton_Click"
+                    Margin="5" Width="140"/>
+            <Button Content="Importuj użytkowników"
+                    Margin="5" Width="140"/>
+            <Button Content="Generuj użytkowników"
+                    Margin="5" Width="140"/>
+        </StackPanel>
+    </Grid>
+</Page>

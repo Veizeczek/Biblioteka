@@ -1,11 +1,17 @@
-﻿using Biblioteka.Services;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using Biblioteka.Data.Entities;
+using Biblioteka.Data.Repositories;   // <— do GetByLogin()
+using Biblioteka.Services;
 
 namespace Biblioteka.Views
 {
     public partial class ForgotPasswordPage : Page
     {
         private readonly AuthService _authService = new AuthService();
+        private readonly UserRepository _userRepo = new UserRepository();
 
         public ForgotPasswordPage()
         {
@@ -16,7 +22,7 @@ namespace Biblioteka.Views
         private void LoadSecurityQuestions()
         {
             var questions = _authService.GetAllSecurityQuestions();
-            QuestionCombo.ItemsSource = questions;
+            QuestionCombo.ItemsSource       = questions;
             QuestionCombo.DisplayMemberPath = "Question";
             QuestionCombo.SelectedValuePath = "QuestionId";
             if (questions is IList<SecurityQuestion> list && list.Count > 0)
@@ -31,20 +37,38 @@ namespace Biblioteka.Views
 
         private void RecoverButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            var login = LoginBox.Text.Trim().ToLowerInvariant();
+            if (string.IsNullOrEmpty(login))
             {
-                var login = LoginBox.Text.Trim();
-                var questionId = (int)QuestionCombo.SelectedValue;
-                var answer = AnswerBox.Text.Trim();
+                MessageBox.Show("Podaj login.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                // Navigate to ChangePasswordPage with collected credentials
-                var frame = (Frame)Application.Current.MainWindow.FindName("MainFrame");
-                frame.Navigate(new ChangePasswordPage(login, questionId, answer));
-            }
-            catch (Exception ex)
+            // Pobieramy użytkownika z bazy
+            var user = _userRepo.GetByLogin(login);
+            if (user == null)
             {
-                MessageBox.Show(ex.Message, "Błąd odzyskiwania hasła", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Nie znaleziono takiego użytkownika.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
+
+            // Jeżeli konto utworzone przez admina (brak QA)
+            if (user.SecurityQuestionId == 0)
+            {
+                MessageBox.Show("Skontaktuj się z administratorem systemu.", "Informacja",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+                // Powrót do logowania
+                var frame = (Frame)Application.Current.MainWindow.FindName("MainFrame");
+                frame.Navigate(new LoginPage());
+                return;
+            }
+
+            // Dalsza część – normalne przekazanie do zmiany hasła
+            var questionId = (int)QuestionCombo.SelectedValue;
+            var answer     = AnswerBox.Text.Trim();
+
+            var frameNext = (Frame)Application.Current.MainWindow.FindName("MainFrame");
+            frameNext.Navigate(new ChangePasswordPage(login, questionId, answer));
         }
     }
 }

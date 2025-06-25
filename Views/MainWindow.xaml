@@ -1,7 +1,8 @@
 ﻿<Window x:Class="Biblioteka.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Biblioteka" Height="450" Width="800">
+        Title="Biblioteka" Height="600" Width="1000"
+        WindowState="Maximized">
     <Grid>
         <Frame Name="MainFrame" NavigationUIVisibility="Hidden" />
     </Grid>

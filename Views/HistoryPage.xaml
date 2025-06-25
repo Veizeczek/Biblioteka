@@ -1,0 +1,200 @@
+<Page x:Class="Biblioteka.Views.HistoryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Historia wypożyczeń – panel admina"
+      Loaded="Page_Loaded">
+    <DockPanel Margin="10">
+
+        <!-- Pasek akcji: Cofnij + Szukaj -->
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Top"
+                    Margin="0,0,0,10">
+            <Button x:Name="BackButton"
+                    Content="← Cofnij"
+                    Width="80" Height="30"
+                    Click="BackButton_Click"/>
+            <TextBlock Text="Szukaj:" 
+                       VerticalAlignment="Center" 
+                       Margin="20,0,0,0"/>
+            <TextBox x:Name="SearchBox"
+                     Width="200"
+                     VerticalAlignment="Center"
+                     Margin="5,0"
+                     TextChanged="SearchBox_TextChanged"/>
+            <Button x:Name="SearchButton"
+                    Content="🔍"
+                    Width="30" Height="22"
+                    VerticalAlignment="Center"
+                    Margin="5,0"
+                    Click="SearchBox_Search"/>
+        </StackPanel>
+
+        <!-- Zakładki z danymi -->
+        <TabControl x:Name="MainTab" DockPanel.Dock="Bottom">
+            <!-- 1. Historia egzemplarza -->
+            <TabItem Header="Historia egzemplarza" x:Name="TabCopies">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid x:Name="CopiesGrid"
+                              Grid.Column="0"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              Loaded="CopiesGrid_Loaded"
+                              SelectionChanged="CopiesGrid_SelectionChanged"
+                              Sorting="CopiesGrid_Sorting"
+                              EnableRowVirtualization="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID egz."
+                                                Binding="{Binding CopyId}"
+                                                SortMemberPath="CopyId"
+                                                Width="60"/>
+                            <DataGridTextColumn Header="Tytuł"
+                                                Binding="{Binding DisplayName}"
+                                                SortMemberPath="DisplayName"
+                                                Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid x:Name="HistoryGrid"
+                              Grid.Column="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Loaded="HistoryGrid_Loaded"
+                              SelectionChanged="HistoryGrid_SelectionChanged"
+                              EnableRowVirtualization="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID wyp."
+                                                Binding="{Binding LoanId}"
+                                                SortMemberPath="LoanId"
+                                                Width="60"/>
+                            <DataGridTextColumn Header="Użytkownik"
+                                                Binding="{Binding UserLogin}"
+                                                SortMemberPath="UserLogin"
+                                                Width="*"/>
+                            <DataGridTextColumn Header="Tytuł książki"
+                                                Binding="{Binding BookTitle}"
+                                                SortMemberPath="BookTitle"
+                                                Width="2*"/>
+                            <DataGridTextColumn Header="Data wyp."
+                                                Binding="{Binding LoanDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                                SortMemberPath="LoanDate"
+                                                Width="140"/>
+                            <DataGridTextColumn Header="Data zwr."
+                                                Binding="{Binding ReturnDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                                SortMemberPath="ReturnDate"
+                                                Width="140"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- 2. Ostatnie operacje -->
+            <TabItem Header="Ostatnie operacje" x:Name="TabRecent">
+                <DataGrid x:Name="RecentGrid"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Loaded="RecentGrid_Loaded"
+                          Sorting="RecentGrid_Sorting"
+                          EnableRowVirtualization="True"
+                          VirtualizingStackPanel.VirtualizationMode="Recycling"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Typ"
+                                            Binding="{Binding Type}"
+                                            SortMemberPath="Type"
+                                            Width="110"/>
+                        <DataGridTextColumn Header="ID egz."
+                                            Binding="{Binding CopyId}"
+                                            SortMemberPath="CopyId"
+                                            Width="60"/>
+                        <DataGridTextColumn Header="Książka"
+                                            Binding="{Binding BookTitle}"
+                                            SortMemberPath="BookTitle"
+                                            Width="2*"/>
+                        <DataGridTextColumn Header="Użytkownik"
+                                            Binding="{Binding UserLogin}"
+                                            SortMemberPath="UserLogin"
+                                            Width="*"/>
+                        <DataGridTextColumn Header="Data"
+                                            Binding="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                            SortMemberPath="Date"
+                                            Width="140"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <!-- 3. Historia użytkowników -->
+            <TabItem Header="Historia użytkowników" x:Name="TabUsers">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid x:Name="UsersGrid"
+                              Grid.Column="0"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Loaded="UsersGrid_Loaded"
+                              SelectionChanged="UsersGrid_SelectionChanged"
+                              Sorting="UsersGrid_Sorting"
+                              EnableRowVirtualization="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID użytk."
+                                                Binding="{Binding UserId}"
+                                                SortMemberPath="UserId"
+                                                Width="60"/>
+                            <DataGridTextColumn Header="Login"
+                                                Binding="{Binding DisplayName}"
+                                                SortMemberPath="DisplayName"
+                                                Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid x:Name="UserHistoryGrid"
+                              Grid.Column="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Loaded="UserHistoryGrid_Loaded"
+                              EnableRowVirtualization="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID wyp."
+                                                Binding="{Binding LoanId}"
+                                                SortMemberPath="LoanId"
+                                                Width="60"/>
+                            <DataGridTextColumn Header="Użytkownik"
+                                                Binding="{Binding UserLogin}"
+                                                SortMemberPath="UserLogin"
+                                                Width="*"/>
+                            <DataGridTextColumn Header="Tytuł książki"
+                                                Binding="{Binding BookTitle}"
+                                                SortMemberPath="BookTitle"
+                                                Width="2*"/>
+                            <DataGridTextColumn Header="Data wyp."
+                                                Binding="{Binding LoanDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                                SortMemberPath="LoanDate"
+                                                Width="140"/>
+                            <DataGridTextColumn Header="Data zwr."
+                                                Binding="{Binding ReturnDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                                SortMemberPath="ReturnDate"
+                                                Width="140"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Page>

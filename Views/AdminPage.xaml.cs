@@ -23,17 +23,21 @@ namespace Biblioteka.Views
 
         private void ManageUsers_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Navigate to user management
+            var frame = (Frame)Application.Current.MainWindow.FindName("MainFrame");
+            frame.Navigate(new ManageUsersView(_currentUser));
         }
 
         private void History_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Navigate to history view
+            var frame = (Frame)Application.Current.MainWindow.FindName("MainFrame");
+            frame.Navigate(new HistoryPage(_currentUser));
+
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Navigate to admin settings
+            var frame = (Frame)Application.Current.MainWindow.FindName("MainFrame");
+            frame.Navigate(new SettingsPage(_currentUser));
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)

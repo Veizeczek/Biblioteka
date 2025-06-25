@@ -4,6 +4,10 @@ global using System.Data.SQLite;
 global using Microsoft.Extensions.Configuration;
 global using System.Windows;
 global using System.Windows.Controls;
+global using System.Collections.ObjectModel;
+global using System.ComponentModel;
+global using System.Windows.Input;
+global using Microsoft.Win32;
 using Biblioteka.Data;
 
 namespace Biblioteka
@@ -15,10 +19,9 @@ namespace Biblioteka
         {
             try
             {
-                // Initialize database: create if not exists
+                // Initialize database (create & seed) if needed
                 DatabaseInitializer.Initialize();
-                DefaultData.InitializeDefaults();
-                
+
                 // Start WPF application
                 var app = new Application();
                 var mainWindow = new Views.MainWindow();
@@ -29,6 +32,7 @@ namespace Biblioteka
                 // Determine project root (three levels up from output directory)
                 var projectDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory)
                     .Parent.Parent.Parent.FullName;
+
                 // Ensure 'database' directory exists in project root
                 var dbDir = Path.Combine(projectDir, "database");
                 if (!Directory.Exists(dbDir))
@@ -38,10 +42,16 @@ namespace Biblioteka
 
                 // Log initialization errors to project database folder
                 var logPath = Path.Combine(dbDir, "log.txt");
-                File.AppendAllText(logPath, $"[{DateTime.UtcNow:o}] ERROR: {ex.Message}{Environment.NewLine}");
+                File.AppendAllText(logPath,
+                    $"[{DateTime.UtcNow:o}] ERROR: {ex.Message}{Environment.NewLine}");
 
                 // Show error to user
-                MessageBox.Show("Wystąpił błąd podczas uruchamiania aplikacji. Sprawdź logi.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    "Wystąpił błąd podczas uruchamiania aplikacji. Sprawdź logi.",
+                    "Błąd",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
             }
         }
     }

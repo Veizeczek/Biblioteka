@@ -35,6 +35,19 @@ namespace Biblioteka.Services
                 throw new InvalidOperationException("Cannot delete an admin user.");
             _userRepo.Delete(id);
         }
+        public void PromoteUser(string login)
+        {
+            var user = _userRepo.GetByLogin(login) ?? throw new ArgumentException("User not found.");
+            user.IsAdmin = true;
+            _userRepo.Update(user);
+        }
+
+        public void DemoteUser(string login)
+        {
+            var user = _userRepo.GetByLogin(login) ?? throw new ArgumentException("User not found.");
+            user.IsAdmin = false;
+            _userRepo.Update(user);
+        }
 
         // Retrieve current active loans for a user
         public IEnumerable<Loan> GetActiveLoans(int userId)

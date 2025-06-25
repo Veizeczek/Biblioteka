@@ -106,5 +106,32 @@ namespace Biblioteka.Data.Repositories
             }
             return list;
         }
+        public IEnumerable<Copy> GetPage(int skip, int take)
+        {
+            var list = new List<Copy>();
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+            SELECT id, book_id, status, notes
+                FROM copies
+            ORDER BY id
+            LIMIT @take OFFSET @skip;";
+            cmd.Parameters.AddWithValue("@take", take);
+            cmd.Parameters.AddWithValue("@skip", skip);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                list.Add(new Copy
+                {
+                    Id     = reader.GetInt32(0),
+                    BookId = reader.GetInt32(1),
+                    Status = reader.GetInt32(2),
+                    Notes  = reader.IsDBNull(3) ? null : reader.GetString(3)
+                });
+            }
+            return list;
+        }
+
     }
 }
