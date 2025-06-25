@@ -1,0 +1,20 @@
+<Window x:Class="Biblioteka.Views.LoadingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        Background="White"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        Topmost="True">
+    <Border CornerRadius="8" Padding="20" Background="White" BorderBrush="#CCC" BorderThickness="1" >
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <ProgressBar IsIndeterminate="True" Width="150" Height="20" Margin="0,0,10,0"/>
+            <TextBlock Text="Wczytuję dane, proszę czekać..." 
+                       VerticalAlignment="Center"
+                       FontSize="14"/>
+        </StackPanel>
+    </Border>
+</Window>

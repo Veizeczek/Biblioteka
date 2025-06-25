@@ -1,0 +1,128 @@
+<!-- BrowseBooks.xaml -->
+<Page x:Class="Biblioteka.Views.BrowseBooks"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Przeglądaj książki">
+  <Grid Margin="10"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+    <!-- struktura siatki -->
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>    <!-- Back button -->
+      <RowDefinition Height="Auto"/>    <!-- Pasek wyszukiwania -->
+      <RowDefinition Height="*"/>       <!-- Główna zawartość -->
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="2*"/>
+      <ColumnDefinition Width="3*"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Przycisk powrotu -->
+    <Button x:Name="BackButton"
+            Content="← Cofnij"
+            Width="80" Height="30"
+            Click="BackButton_Click"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Left"/>
+
+    <!-- Pasek wyszukiwania -->
+    <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,5,0,5">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0"
+                 Text="Szukaj:"
+                 VerticalAlignment="Center"/>
+      <TextBox Grid.Column="1"
+               x:Name="SearchBox"
+               Margin="5,0,0,0"
+               TextChanged="SearchBox_TextChanged"
+               HorizontalAlignment="Stretch"/>
+    </Grid>
+
+    <!-- Lista książek -->
+    <DataGrid x:Name="AvailableBooksGrid"
+              Grid.Row="2"
+              Grid.Column="0"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              HeadersVisibility="Column"
+              AlternatingRowBackground="#FFF0F0F0"
+              SelectionMode="Single"
+              SelectionUnit="FullRow"
+              SelectionChanged="AvailableBooksList_SelectionChanged"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Margin="0,0,0,5">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Tytuł" Binding="{Binding Title}" Width="*" />
+        <DataGridTextColumn Header="Autor" Binding="{Binding Author}" Width="*" />
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <!-- Panel szczegółów -->
+    <StackPanel Grid.Row="2"
+                Grid.Column="1"
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+      <TextBlock x:Name="NoSelectionText"
+                 Text="Wybierz książkę, aby zobaczyć szczegóły."
+                 FontStyle="Italic"
+                 Foreground="Gray"/>
+      <ScrollViewer x:Name="DetailsScroller"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+        <StackPanel x:Name="DetailsContent" Margin="0">
+
+          <!-- *** DODANE: obraz okładki książki *** -->
+          <Image Source="{Binding SelectedBookImage}"
+                 MaxWidth="400"
+                 MaxHeight="600"
+                 Stretch="Uniform"
+                 HorizontalAlignment="Center"
+                 Margin="0,0,0,10"/>
+
+          <!-- istniejące pola szczegółów -->
+          <TextBlock Text="Tytuł:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Title}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="Autor:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Author}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="ISBN:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.ISBN}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="Wydawca:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Publisher}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="Rok wydania:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Year}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="Stron:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Pages}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="Gatunek:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Genre}" Margin="0,0,0,10"/>
+
+          <TextBlock Text="Język:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SelectedBook.Language}" Margin="0,0,0,10"/>
+
+          <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <Button x:Name="BorrowButton"
+                    Content="Wypożycz"
+                    Click="BorrowButton_Click"
+                    Width="100"/>
+          </StackPanel>
+        </StackPanel>
+      </ScrollViewer>
+    </StackPanel>
+  </Grid>
+</Page>
