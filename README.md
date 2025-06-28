@@ -2,7 +2,7 @@
 
 
 Repozytorium projektu zaliczeniowego grupy **2**  
-**Autorzy**: Adrian Hadyk  
+**Autorzy**: Adrian Hadyk, Dawid Dziedzic, Marcel Jędryka  
 Temat: **System zarządzania biblioteką** — desktopowa aplikacja w języku **C#** z lokalną bazą danych **SQLite**.   
 Umożliwia dodawanie książek i użytkowników, zarządzanie wypożyczeniami oraz przeglądanie historii operacji. Posiada wersje kliencka jak i administratora, z przyjaznym UI.
 
