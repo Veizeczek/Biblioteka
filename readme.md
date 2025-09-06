@@ -1,8 +1,5 @@
 # 📚 Aplikacja Biblioteka
 
-
-Repozytorium projektu zaliczeniowego grupy **2**  
-**Autorzy**: Adrian Hadyk 
 Temat: **System zarządzania biblioteką** — desktopowa aplikacja w języku **C#** z lokalną bazą danych **SQLite**.  
 Umożliwia dodawanie książek i użytkowników, zarządzanie wypożyczeniami oraz przeglądanie historii operacji. Posiada wersje kliencka jak i administratora, z przyjaznym UI.
 
@@ -17,8 +14,7 @@ Umożliwia dodawanie książek i użytkowników, zarządzanie wypożyczeniami or
 5. [Schemat bazy danych](#-schemat-bazy-danych)  
 6. [Bezpieczeństwo](#-bezpieczeństwo)  
 7. [Kontrybucja](#-kontrybucja)  
-8. [Licencja](#-licencja)  
-9. [Autorzy](#-autorzy)  
+8. [Licencja](#-licencja)   
 
 ---
 
@@ -200,16 +196,5 @@ Projekt zaliczeniowy – nie przewiduje się dalszego rozwoju, ale mile widziane
 ## 📜 Licencja
 
 Projekt edukacyjny — brak licencji komercyjnej. Można używać dowolnie.
-
----
-
-## 👥 Autorzy
-
-| Imię i nazwisko   | Rola           | Kontakt                    |
-|-------------------|----------------|----------------------------|
-| Adrian Hadyk  | Developer      | adrian.hadyk2005@gmail.com |
-
-Projekt wykonany w ramach zajęć **Programowanie obiektowe (sem.2) AK1 – 2024/25**  
-Debugowany na Windows 11.
 
 ---
